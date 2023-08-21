@@ -52,7 +52,6 @@ resource "aws_db_subnet_group" "subnet_groups" {
 
   name       = "subnet-group-${each.key}"
   subnet_ids = [for subnet in each.value.subnets : var.subnets[subnet].id]
-  # subnet_ids = [aws_subnet.subnet_private_1b.id, aws_subnet.subnet_private_1c.id]
   tags = { Name = "subnet-group-${each.key}" }
 }
 
@@ -68,7 +67,6 @@ resource "aws_db_instance" "rds" {
   instance_class         = each.value.instance_class
   db_subnet_group_name   = aws_db_subnet_group.subnet_groups[each.key].name
   vpc_security_group_ids = [for sg in each.value.vpc_security_groups : aws_security_group.sgs[sg].id]
-  # vpc_security_group_ids = [aws_security_group.sg_private_rds.id]
   availability_zone   = each.value.availability_zone
   skip_final_snapshot = each.value.skip_final_snapshot
 }
